@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Race Rift</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #101526;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #menu {
+      position: fixed;
+      inset: 0;
+
+      background:
+        linear-gradient(#11182c, #202d50);
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 64px;
+      margin: 10px;
+    }
+
+    .subtitle {
+      color: #b8c6e5;
+      margin-bottom: 25px;
+    }
+
+    button,
+    input {
+      font-size: 20px;
+      padding: 12px 20px;
+      margin: 6px;
+
+      border-radius: 10px;
+      border: none;
+    }
+
+    button {
+      background: #7c5cff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    #roomInfo {
+      font-size: 26px;
+      margin: 15px;
+    }
+
+    #message {
+      color: #ffdd66;
+      min-height: 30px;
+    }
+
+    #gameCanvas {
+      display: block;
+      background: #18213b;
+    }
+
+    #hud {
+      position: fixed;
+      left: 15px;
+      top: 15px;
+
+      text-align: left;
+
+      z-index: 5;
+      font-size: 18px;
+
+      pointer-events: none;
+    }
+
+    #bigMessage {
+      position: fixed;
+      top: 100px;
+
+      width: 100%;
+
+      font-size: 50px;
+      font-weight: bold;
+
+      z-index: 6;
+
+      pointer-events: none;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div id="menu">
+
+    <h1>RACE RIFT</h1>
+
+    <div class="subtitle">
+      Multiplayer Platform Racing
+    </div>
+
+    <button id="createButton">
+      CREATE GAME
+    </button>
+
+    <div>OR</div>
+
+    <div>
+
+      <input
+        id="roomInput"
+        maxlength="4"
+        placeholder="ROOM CODE"
+      >
+
+      <button id="joinButton">
+        JOIN GAME
+      </button>
+
+    </div>
+
+    <div id="roomInfo"></div>
+
+    <div id="message"></div>
+
+    <p>
+      MOVE: A / D or LEFT / RIGHT<br>
+      JUMP: W / SPACE / UP
+    </p>
+
+  </div>
+
+  <div id="hud"></div>
+
+  <div id="bigMessage"></div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script src="game.js"></script>
+
+</body>
+
+</html>
