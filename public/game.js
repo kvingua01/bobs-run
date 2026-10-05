@@ -24,6 +24,11 @@ let cameraX = 0;
 
 const WORLD_WIDTH = 6500;
 
+
+// ======================================================
+// PLAYER
+// ======================================================
+
 const player = {
   x: 100,
   y: 400,
@@ -33,9 +38,13 @@ const player = {
   vy: 0,
   speed: 6,
   jump: 15,
-  grounded: false,
-  slowedUntil: 0
+  grounded: false
 };
+
+
+// ======================================================
+// OTHER PLAYER
+// ======================================================
 
 const opponent = {
   x: 140,
@@ -44,12 +53,12 @@ const opponent = {
   height: 50
 };
 
+
 const keys = {};
 
 
 // ======================================================
 // PLATFORMS
-// Every platform varies in size, height, and appearance.
 // ======================================================
 
 const platforms = [
@@ -59,10 +68,11 @@ const platforms = [
 
   // SECTION 1
   { x: 720, y: 550, w: 180, h: 130, style: 1 },
+
   { x: 980, y: 475, w: 240, h: 35, style: 2 },
 
-  // SLOW DETOUR PLATFORM
   { x: 780, y: 370, w: 110, h: 25, style: 6 },
+
 
   // SECTION 2
   { x: 1300, y: 600, w: 500, h: 80, style: 3 },
@@ -71,8 +81,8 @@ const platforms = [
 
   { x: 2070, y: 445, w: 210, h: 40, style: 5 },
 
-  // SLOW DETOUR
   { x: 2190, y: 300, w: 100, h: 25, style: 7 },
+
 
   // SECTION 3
   { x: 2360, y: 600, w: 370, h: 80, style: 6 },
@@ -81,8 +91,8 @@ const platforms = [
 
   { x: 2990, y: 455, w: 270, h: 35, style: 0 },
 
-  // SLOW DETOUR
   { x: 3070, y: 300, w: 100, h: 25, style: 3 },
+
 
   // SECTION 4
   { x: 3340, y: 600, w: 420, h: 80, style: 1 },
@@ -91,8 +101,8 @@ const platforms = [
 
   { x: 4070, y: 410, w: 200, h: 40, style: 3 },
 
-  // SLOW DETOUR
   { x: 4160, y: 260, w: 100, h: 25, style: 6 },
+
 
   // SECTION 5
   { x: 4350, y: 545, w: 140, h: 135, style: 4 },
@@ -103,8 +113,8 @@ const platforms = [
 
   { x: 5310, y: 430, w: 160, h: 35, style: 7 },
 
-  // SLOW DETOUR
   { x: 5350, y: 280, w: 100, h: 25, style: 2 },
+
 
   // FINAL SECTION
   { x: 5550, y: 600, w: 300, h: 80, style: 0 },
@@ -112,6 +122,7 @@ const platforms = [
   { x: 5920, y: 520, w: 160, h: 35, style: 1 },
 
   { x: 6150, y: 600, w: 350, h: 80, style: 2 }
+
 ];
 
 
@@ -153,53 +164,6 @@ const springs = [
   { x: 4910, y: 565, w: 45, h: 35 },
 
   { x: 5790, y: 565, w: 45, h: 35 }
-
-];
-
-
-// ======================================================
-// SLOW POWERUPS
-//
-// These are intentionally OFF the fastest route.
-// You have to take a detour to get them.
-// ======================================================
-
-const powerups = [
-
-  {
-    x: 835,
-    y: 330,
-    r: 18,
-    used: false
-  },
-
-  {
-    x: 2240,
-    y: 260,
-    r: 18,
-    used: false
-  },
-
-  {
-    x: 3120,
-    y: 260,
-    r: 18,
-    used: false
-  },
-
-  {
-    x: 4210,
-    y: 220,
-    r: 18,
-    used: false
-  },
-
-  {
-    x: 5400,
-    y: 240,
-    r: 18,
-    used: false
-  }
 
 ];
 
@@ -380,34 +344,6 @@ socket.on(
 
 
 // ======================================================
-// GET SLOWED
-// ======================================================
-
-socket.on(
-  "getSlowed",
-  () => {
-
-    player.slowedUntil =
-      Date.now() + 3500;
-
-    bigMessage.textContent =
-      "SLOWED!";
-
-    setTimeout(
-      () => {
-
-        bigMessage.textContent =
-          "";
-
-      },
-      1000
-    );
-
-  }
-);
-
-
-// ======================================================
 // OTHER PLAYER WINS
 // ======================================================
 
@@ -474,24 +410,9 @@ function update() {
   }
 
 
-  // ------------------------------
-  // SLOW EFFECT
-  // ------------------------------
-
-  const slowed =
-    Date.now() <
-    player.slowedUntil;
-
-
-  const moveSpeed =
-    slowed
-      ? player.speed * 0.45
-      : player.speed;
-
-
-  // ------------------------------
+  // ==================================================
   // LEFT / RIGHT
-  // ------------------------------
+  // ==================================================
 
   if (
     keys["KeyA"] ||
@@ -499,7 +420,7 @@ function update() {
   ) {
 
     player.vx =
-      -moveSpeed;
+      -player.speed;
 
   }
 
@@ -509,7 +430,7 @@ function update() {
   ) {
 
     player.vx =
-      moveSpeed;
+      player.speed;
 
   }
 
@@ -520,9 +441,9 @@ function update() {
   }
 
 
-  // ------------------------------
+  // ==================================================
   // JUMP
-  // ------------------------------
+  // ==================================================
 
   if (
 
@@ -545,16 +466,16 @@ function update() {
   }
 
 
-  // ------------------------------
+  // ==================================================
   // GRAVITY
-  // ------------------------------
+  // ==================================================
 
   player.vy += 0.75;
 
 
-  // ------------------------------
+  // ==================================================
   // MOVEMENT
-  // ------------------------------
+  // ==================================================
 
   player.x += player.vx;
 
@@ -676,72 +597,6 @@ function update() {
 
 
   // ==================================================
-  // SLOW POWERUPS
-  // ==================================================
-
-  for (
-    const power
-    of powerups
-  ) {
-
-    if (power.used) {
-      continue;
-    }
-
-
-    const dx =
-
-      player.x +
-      player.width / 2 -
-      power.x;
-
-
-    const dy =
-
-      player.y +
-      player.height / 2 -
-      power.y;
-
-
-    const distance =
-
-      Math.sqrt(
-        dx * dx +
-        dy * dy
-      );
-
-
-    if (distance < 40) {
-
-      power.used = true;
-
-
-      socket.emit(
-        "slowOpponent",
-        room
-      );
-
-
-      bigMessage.textContent =
-        "SLOW ATTACK!";
-
-
-      setTimeout(
-        () => {
-
-          bigMessage.textContent =
-            "";
-
-        },
-        900
-      );
-
-    }
-
-  }
-
-
-  // ==================================================
   // FALL OFF MAP
   // ==================================================
 
@@ -845,13 +700,7 @@ function update() {
     Math.floor(player.x) +
 
     " / " +
-    WORLD_WIDTH +
-
-    (
-      slowed
-        ? "<br>SLOWED!"
-        : ""
-    );
+    WORLD_WIDTH;
 
 }
 
@@ -876,8 +725,6 @@ function drawBackground() {
 
   );
 
-
-  // DISTANT MOUNTAINS
 
   ctx.fillStyle =
     "#222e51";
@@ -924,7 +771,7 @@ function drawBackground() {
 
 
 // ======================================================
-// DRAW DIFFERENT PLATFORM STYLES
+// DRAW PLATFORM
 // ======================================================
 
 function drawPlatform(p) {
@@ -958,8 +805,6 @@ function drawPlatform(p) {
     ];
 
 
-  // MAIN PLATFORM
-
   ctx.fillStyle =
     style[0];
 
@@ -975,8 +820,6 @@ function drawPlatform(p) {
   );
 
 
-  // TOP EDGE
-
   ctx.fillStyle =
     style[1];
 
@@ -991,8 +834,6 @@ function drawPlatform(p) {
 
   );
 
-
-  // DETAILS
 
   ctx.fillStyle =
     "rgba(255,255,255,0.12)";
@@ -1144,8 +985,6 @@ function draw() {
     of springs
   ) {
 
-    // SPRING BODY
-
     ctx.fillStyle =
       "#ffd43b";
 
@@ -1161,8 +1000,6 @@ function draw() {
     );
 
 
-    // SPRING TOP
-
     ctx.fillStyle =
       "#ff8c32";
 
@@ -1177,8 +1014,6 @@ function draw() {
 
     );
 
-
-    // SPRING LINES
 
     ctx.strokeStyle =
       "#8b5a00";
@@ -1208,97 +1043,6 @@ function draw() {
 
 
     ctx.stroke();
-
-  }
-
-
-  // ==================================================
-  // SLOW POWERUPS
-  // ==================================================
-
-  for (
-    const p
-    of powerups
-  ) {
-
-    if (p.used) {
-      continue;
-    }
-
-
-    // OUTER GLOW
-
-    ctx.fillStyle =
-      "rgba(189,101,255,0.25)";
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-
-      p.x,
-      p.y,
-
-      p.r + 10,
-
-      0,
-      Math.PI * 2
-
-    );
-
-
-    ctx.fill();
-
-
-    // POWERUP
-
-    ctx.fillStyle =
-      "#bd65ff";
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-
-      p.x,
-      p.y,
-
-      p.r,
-
-      0,
-      Math.PI * 2
-
-    );
-
-
-    ctx.fill();
-
-
-    // S LETTER
-
-    ctx.fillStyle =
-      "white";
-
-
-    ctx.font =
-      "bold 20px Arial";
-
-
-    ctx.textAlign =
-      "center";
-
-
-    ctx.fillText(
-
-      "S",
-
-      p.x,
-
-      p.y + 7
-
-    );
 
   }
 
@@ -1393,7 +1137,7 @@ function draw() {
   );
 
 
-  // OTHER PLAYER EYES
+  // OTHER PLAYER EYE
 
   ctx.fillStyle =
     "white";
